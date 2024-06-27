@@ -1,0 +1,2 @@
+export const supabaseUrl: string = 'https://rhzsawowgoyzhwksgzjf.supabase.co';
+export const supabaseKey: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJoenNhd293Z295emh3a3NnempmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg5NzQwODgsImV4cCI6MjAzNDU1MDA4OH0.JKQzAcYxFuTyGPm7ESzbCADQ1Yn0b7AqKOffxUY44Bc';
