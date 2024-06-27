@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import  supabase  from '@/lib/supabase/init';
+import supabase from '@/lib/supabase/init';
 import bcrypt from 'bcrypt';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -21,11 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (!passwordMatch) {
             return res.status(400).json({ message: 'Incorrect password', status: false });
         }
-
-        // Buat token autentikasi (misalnya JWT)
-        const token = 'your_generated_token_here'; // Ganti dengan logika token sebenarnya
-
-        return res.status(200).json({ message: 'Login successful', status: true, token });
+        return res.status(200).json({ message: 'Login successful', status: true });
     } else {
         return res.status(405).json({ message: 'Method not allowed', status: false });
     }
