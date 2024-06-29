@@ -35,4 +35,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 #kredensial supabase
-src/lib/supabase/secret.ts
+src/lib/supabase/secret.ts.env
