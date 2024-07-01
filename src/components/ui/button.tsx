@@ -1,5 +1,5 @@
 const Button = (props: any) => {
-    const { type, onClick,className,id,value } = props;
+    const { type, onClick,className,id,value,children } = props;
   return (
     <button
       type={type}
@@ -8,6 +8,7 @@ const Button = (props: any) => {
       onClick={onClick}
     >
       {value}
+      {children}
     </button>
   );
 };

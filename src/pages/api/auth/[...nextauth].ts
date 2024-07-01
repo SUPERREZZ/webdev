@@ -1,7 +1,6 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { signIn } from '@/lib/supabase/service';
 
 const authOptions: NextAuthOptions = {
     providers: [
@@ -17,11 +16,26 @@ const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 const { email, password } = credentials as { email: string, password: string };
-                const user = await signIn(email, password);
-                if (user) {
-                    return { id: user.id, name: user.name, email: user.email, role: user.role };
+                console.log(email, password);
+                try {
+                    const res = await fetch("http://localhost:3000/api/auth/login", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password }),
+                    });
+                    if (!res.ok) {
+                        throw new Error('Failed to sign in');
+                    }
+                    const user = await res.json();
+                    if (user) {
+                        return { id: user.id, name: user.name, email: user.email, role: user.role };
+                    } else {
+                        return null;
+                    }
+                } catch (error) {
+                    console.error('Error during authorization:', error);
+                    return null;
                 }
-                return null;
             },
         }),
     ],
