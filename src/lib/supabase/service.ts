@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import supabase from './init';
 import bcrypt from 'bcrypt';
 
@@ -58,5 +59,33 @@ const signIn = async (email: string, password: string) => {
         throw new Error('Error signing in');
     }
 };
-
-export { getByEmail, validatePassword, signUp, signIn };
+ const getProducts = async () => {
+    try {
+      const { data, error } = await supabase.from('product').select('*');
+  
+      if (error) {
+        throw error;
+      }
+  
+      return data;
+    } catch (error: any) {
+      console.error('Error retrieving products:', error.message);
+      return null;
+    }
+  };
+const getProductsById = async (id: UUID) => {
+    try {
+        const { data, error } = await supabase.from('product').select('*').eq('id', id).single();
+    
+        if (error) {
+          throw error;
+        }
+    
+        return data;
+    
+    } catch (error: any) {
+      console.error('Error retrieving products:', error.message);
+      return null;
+    }
+}
+export { getByEmail, validatePassword, signUp, signIn ,getProducts,getProductsById};
