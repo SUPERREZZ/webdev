@@ -7,10 +7,11 @@ import { faCartPlus } from '@fortawesome/free-solid-svg-icons/faCartPlus'
 import { faHeart } from '@fortawesome/free-solid-svg-icons/faHeart'
 import { faCartShopping as faCart } from "@fortawesome/free-solid-svg-icons/faCartShopping";
 import Button from '@/components/ui/button';
+import { useRouter } from 'next/router';
 
 
 const Sidebar = ({ barOpen, setBarOpen, logout, user }: { barOpen: boolean, setBarOpen: Function , logout: Function, user: any}) => {
-
+  const router = useRouter();
   return (
     <div className={`fixed  top-0 left-0 z-40 w-1/6 h-screen p-4 overflow-y-auto transition-transform ${barOpen ? 'translate-x-0' : '-translate-x-full'} bg-white dark:bg-gray-800 `} >
       <Button type="button" onClick={() => setBarOpen(false)} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -30,7 +31,7 @@ const Sidebar = ({ barOpen, setBarOpen, logout, user }: { barOpen: boolean, setB
           {user?.role !== 'admin' ? (
             <>
               <li>
-                <Button className="w-full">
+                <Button className="w-full" onClick={() => router.push('/cart')}>
                   <p className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <FontAwesomeIcon icon={faCart} />
                     <span className="flex-1 ms-3 whitespace-nowrap">Cart</span>
@@ -38,15 +39,15 @@ const Sidebar = ({ barOpen, setBarOpen, logout, user }: { barOpen: boolean, setB
                 </Button>
               </li>
               <li>
-                <Button className="w-full">
+                <Button className="w-full" onClick={() => router.push('/orders')}>
                   <p className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <FontAwesomeIcon icon={faHeart} />
-                    <span className="flex-1 ms-3 whitespace-nowrap">Wishlist</span>
+                    <FontAwesomeIcon icon={faCart} />
+                    <span className="flex-1 ms-3 whitespace-nowrap">Order</span>
                   </p>
                 </Button>
               </li>
-
-            </>) : (
+            </>
+            ) : (
             <li>
               <Button className="w-full">
                 <p className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">

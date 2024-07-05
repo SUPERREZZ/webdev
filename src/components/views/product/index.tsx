@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBoxes } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons/faStar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
@@ -11,8 +11,9 @@ interface Product {
   price: number;
   image_url: string;
   stock: number;
+
 }
-const Pro = ({  products }: {  products: Product[] }) => {
+const Product = ({ products }: { products: Product[] }) => {
 
   return (
     <div className={`w-full container mx-auto p-4`}>
@@ -37,13 +38,13 @@ const Pro = ({  products }: {  products: Product[] }) => {
                   <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">4.0</span>
                 </div>
                 <div className="flex items-center justify-between">
+                  <p className="text-md font-semibold  text-gray-900 dark:text-white">
+                    <FontAwesomeIcon icon={faBoxes} className="text-gray-500 mr-2" />
+                    {product.stock} pcs
+                  </p>
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">
                     {Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price)}
                   </span>
-                  <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <FontAwesomeIcon icon={faCartPlus} className="mr-2" />
-                    Add to cart
-                  </button>
                 </div>
               </div>
             </Link>
@@ -53,4 +54,4 @@ const Pro = ({  products }: {  products: Product[] }) => {
     </div>
   )
 }
-export default Pro
+export default Product

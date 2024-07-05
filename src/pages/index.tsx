@@ -5,7 +5,18 @@ import { getSession, signOut, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/views/navbar';
 import Sidebar from '@/components/views/sidebar';
-import Pro from '@/components/views/pro';
+import Product from '@/components/views/product';
+
+type ProductType = {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  image_url: string;
+  stock: number;
+  sizes: string[];
+  colors: string[];
+};
 
 
 const Dashboard = (props : any) => {
@@ -16,12 +27,12 @@ const Dashboard = (props : any) => {
   const { data: session, status } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [filteredProducts, setFilteredProducts] = useState(products);
   useEffect(() => {
     const registerUserIfNeeded = async () => {
       if (session) {
         const email = session.user?.email;
         const name = session.user?.name;
-  
         try {
           const regis = await fetch('/api/auth/register', {
             method: 'POST',
@@ -65,6 +76,17 @@ const Dashboard = (props : any) => {
 
     registerUserIfNeeded();
   }, [session, push]);
+
+  const handleSearch = (query: string) => {
+    if (!query) {
+      setFilteredProducts(products);
+    } else {
+      const filtered = products.filter((product: ProductType) =>
+        product.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    }
+  };
   
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -84,10 +106,10 @@ const Dashboard = (props : any) => {
 
   return (
     <>
-      <Navbar setBarOpen={setSidebarOpen} user={user} logout={handleLogout} />
-      <div className='flex justify-center'>
+      <Navbar setBarOpen={setSidebarOpen} user={user} logout={handleLogout} handleSearch={handleSearch} />
+      <div className='flex  justify-center'>
         <Sidebar setBarOpen={setSidebarOpen} barOpen={sidebarOpen} logout={handleLogout} user={user} />
-        {children ? children : <Pro  products={products} />}
+        {children ? children : <Product  products={filteredProducts} />}
       </div>
     </>
   );

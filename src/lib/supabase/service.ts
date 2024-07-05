@@ -9,7 +9,7 @@ export type User = {
     password: string;
 };
 
-const getByEmail = async (email: string) => {
+export const getByEmail = async (email: string) => {
     try {
         const { data: user, error } = await supabase.from('users').select('*').eq('email', email);
         if (error) throw error;
@@ -20,7 +20,7 @@ const getByEmail = async (email: string) => {
     }
 };
 
-const validatePassword = async (password: string, hashedPassword: string) => {
+export const validatePassword = async (password: string, hashedPassword: string) => {
     try {
         const isValid = await bcrypt.compare(password, hashedPassword);
         return isValid;
@@ -30,7 +30,7 @@ const validatePassword = async (password: string, hashedPassword: string) => {
     }
 };
 
-const signUp = async (dataUser: User, callback: Function) => {
+export const signUp = async (dataUser: User, callback: Function) => {
     try {
         const { data: existingUsers, error } = await supabase.from('users').select('*').eq('email', dataUser.email);
         if (error) throw error;
@@ -48,7 +48,7 @@ const signUp = async (dataUser: User, callback: Function) => {
     }
 };
 
-const signIn = async (email: string, password: string) => {
+export const signIn = async (email: string, password: string) => {
     try {
         const user = await getByEmail(email);
         if (!user) throw new Error('User not found');
@@ -59,7 +59,7 @@ const signIn = async (email: string, password: string) => {
         throw new Error('Error signing in');
     }
 };
- const getProducts = async () => {
+export const getProducts = async () => {
     try {
       const { data, error } = await supabase.from('product').select('*');
   
@@ -73,7 +73,8 @@ const signIn = async (email: string, password: string) => {
       return null;
     }
   };
-const getProductsById = async (id: UUID) => {
+
+export const getProductsById = async (id: UUID) => {
     try {
         const { data, error } = await supabase.from('product').select('*').eq('id', id).single();
     
@@ -88,4 +89,100 @@ const getProductsById = async (id: UUID) => {
       return null;
     }
 }
-export { getByEmail, validatePassword, signUp, signIn ,getProducts,getProductsById};
+// belum cek
+export const getDataCartByIdUser = async (userId: UUID) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('cart')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data.cart;
+};
+export const updateCart = async (userId: UUID, cart: any[]) => {
+  const { data, error } = await supabase
+    .from('users')
+    .update({ cart })
+    .eq('id', userId);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
+export const createOrder = async (userId: UUID) => {
+  try {
+    // Mengambil data cart berdasarkan userId
+    const cart = await getDataCartByIdUser(userId);
+
+    // Check if cart is empty
+    if (!cart || cart.length === 0) {
+      throw new Error('Cart is empty');
+    }
+
+    // Update stock and prepare order data
+    const orderItems = [];
+    for (const item of cart) {
+      const { productId, quantity } = item;
+      const product = await getProductsById(productId);
+
+      if (product.stock < quantity) {
+        throw new Error(`Insufficient stock for product ${productId}`);
+      }
+
+      // Kurangi stok produk
+      await supabase
+        .from('product')
+        .update({ stock: product.stock - quantity })
+        .eq('id', productId);
+
+      // Tambahkan item ke pesanan
+      orderItems.push(item);
+    }
+
+    // Perbarui kolom order di tabel users
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('order')
+      .eq('id', userId)
+      .single();
+
+    if (userError) {
+      throw userError;
+    }
+
+    const updatedOrder = [...(user.order || []), ...orderItems]; // Ensure user.order is always an array
+
+    const { data: updatedUser, error: updateUserError } = await supabase
+      .from('users')
+      .update({ order: updatedOrder, cart: [] })
+      .eq('id', userId);
+
+    if (updateUserError) {
+      throw updateUserError;
+    }
+
+    return updatedOrder;
+  } catch (error: any) {
+    console.error('Error creating order:', error.message);
+    throw new Error(error.message);
+  }
+};
+export const getOrders = async (userId: UUID) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('order')
+    .eq('id', userId)
+    .single();
+  if (error) {
+    throw error;
+  }
+  console.log(data.order);
+  return data.order;
+}

@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try { 
         const user = await getByEmail(email);
-        return res.status(200).json({ message: 'Sign in successful', data:{name:user?.name,email:user?.email,role:user?.role} });
+        return res.status(200).json({ message: 'Sign in successful', data:{name:user?.name,email:user?.email,role:user?.role,id:user?.id} });
     } catch (error: any) {
         return res.status(401).json({ message: error.message });
     }
