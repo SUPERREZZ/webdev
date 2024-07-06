@@ -9,22 +9,22 @@ import { getSession } from 'next-auth/react';
 import Image from 'next/image';
 
 interface OrderItem {
-    productId: string;// tidak perlu di display
+    productId: string;
     quantity: number;
     size: string;
     color: string;
     productDetails: ProductDetails;
 }
 interface ProductDetails {
-    id: string;// tidak perlu di display
+    id: string;
     name: string;
     description: string;
     price: number;
     image_url: string;
-    created_at: string;// tidak perlu di display
-    stock: number;// tidak perlu di display
-    colors: string[];// tidak perlu di display
-    sizes: string[]; // tidak perlu di display
+    created_at: string;
+    stock: number;
+    colors: string[];
+    sizes: string[];
 }
 
 interface OrdersProps {
@@ -123,9 +123,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     let orders = [];
 
     try {
-        orders = await fetch(`http://localhost:3000/api/order/${email}`).then((res) => res.json())
+        orders = await fetch(`${process.env.URLFETCH}/api/order/queryEmail/${email}`).then((res) => res.json())
         for (const item of orders.data) {
-            const product = await fetch(`http://localhost:3000/api/product/productsingle/${item.productId}`).then((res) => res.json())
+            const product = await fetch(`${process.env.URLFETCH}/api/product/productsingle/${item.productId}`).then((res) => res.json())
             item.productDetails = product
         }
 

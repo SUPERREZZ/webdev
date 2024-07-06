@@ -21,7 +21,7 @@ const Sidebar = ({ barOpen, setBarOpen, logout, user }: { barOpen: boolean, setB
       <div className="py-4 overflow-y-auto mt-10">
         <ul className="space-y-2 font-medium space-y-5">
           <li>
-            <Button className="w-full ">
+            <Button className="w-full " onClick={() => router.push('/')}>
               <p className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100  dark:hover:bg-gray-700 group">
                 <FontAwesomeIcon icon={faHouse} />
                 <span className="ms-3 whitespace-nowrap flex-1">Home</span>
@@ -48,14 +48,25 @@ const Sidebar = ({ barOpen, setBarOpen, logout, user }: { barOpen: boolean, setB
               </li>
             </>
             ) : (
-            <li>
-              <Button className="w-full">
+              <>
+              <li>
+              <Button className="w-full" onClick={() => router.push('/admin/product')}>
                 <p className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                   <FontAwesomeIcon icon={faCartPlus} />
-                  <span className="flex-1 ms-3 whitespace-nowrap">add Products</span>
+                  <span className="flex-1 ms-3 whitespace-nowrap">Products</span>
                 </p>
               </Button>
             </li>
+            <li>
+              <Button className="w-full" onClick={() => router.push('/admin/order')}>
+                <p className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                  <FontAwesomeIcon icon={faCartPlus} />
+                  <span className="flex-1 ms-3 whitespace-nowrap">order</span>
+                </p>
+              </Button>
+            </li>
+              </>
+            
           )}
           <li>
             <Button className="w-full" onClick={() => logout()}>

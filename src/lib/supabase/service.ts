@@ -186,3 +186,82 @@ export const getOrders = async (userId: UUID) => {
   console.log(data.order);
   return data.order;
 }
+export const updateProductById = async(id: UUID, product: any) => {
+  const { data, error } = await supabase
+      .from('product')
+      .update(product)
+      .eq('id', id)
+      .single();
+  if (error) throw error;
+  return {message : "success"};
+}
+export const createProduct = async (product: any) => {
+  const { data, error } = await supabase
+      .from('product')
+      .insert(product)
+      .single();
+
+  if (error) throw error;
+  return data;
+}
+export const getOrdersWithProductDetails = async () => {
+  try {
+      const { data: users, error: userError } = await supabase
+          .from('users')
+          .select('email, order');
+        console.log(users)
+      if (userError) {
+          console.error('Error fetching users:', userError);
+          throw new Error(userError.message);
+      }
+
+      let ordersWithDetails = [];
+
+      for (const user of users) {
+          if (!user || !user.order) {
+              continue;
+          }
+
+          for (const order of user.order) {
+              const { data: product, error: productError } = await supabase
+                  .from('product')
+                  .select('*')
+                  .eq('id', order.productId)
+                  .single();
+
+              if (productError) {
+                  console.error('Error fetching product:', productError);
+                  throw new Error(productError.message);
+              }
+
+              ordersWithDetails.push({
+                  email: user.email,
+                  ...order,
+                  productName: product.name,
+                  productPrice: product.price,
+                  productImageUrl: product.image_url,
+              });
+          }
+      }
+
+      return ordersWithDetails;
+  } catch (error) {
+      console.error('Error in getOrdersWithProductDetails:', error);
+      throw error;
+  }
+};
+export async function deleteOrderByEmail(email: string) {
+  const { data, error } = await supabase
+      .from('users')
+      .update({
+          order: [],
+      })
+      .match({ email })
+      .single();
+
+  if (error) {
+      throw new Error(error.message);
+  }
+
+  return data;
+}

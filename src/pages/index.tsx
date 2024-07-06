@@ -34,7 +34,7 @@ const Dashboard = (props : any) => {
         const email = session.user?.email;
         const name = session.user?.name;
         try {
-          const regis = await fetch('/api/auth/register', {
+          const regis = await fetch(`${process.env.URLFETCH}/api/auth/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const Dashboard = (props : any) => {
               role: 'user'
             }),
           });
-          const getData = await fetch('/api/auth/getuser', {
+          const getData = await fetch(`${process.env.URLFETCH}/api/auth/getuser`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const product = await  fetch('http://localhost:3000/api/product')
+  const product = await  fetch(`${process.env.URLFETCH}/api/product`)
   const data = await product.json()
     if (!product) {
       return {

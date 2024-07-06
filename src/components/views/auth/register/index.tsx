@@ -27,7 +27,7 @@ const Register = () => {
             setError('Password and confirm password should match')
             return
         }
-        const response = await fetch('/api/auth/register', {
+        const response = await fetch(`${process.env.URLFETCH}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

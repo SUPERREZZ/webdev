@@ -1,12 +1,11 @@
-// pages/api/order/index.ts
+// pages/api/order/queryEmail/[email].ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createOrder, getByEmail,getOrders } from '@/lib/supabase/service';
+import { createOrder, deleteOrderByEmail, getByEmail,getOrders } from '@/lib/supabase/service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    
+    const { email } = req.query;
     if (req.method === 'POST') {
-        const { email } = req.query;
         try {
             const user = await getByEmail(email as string);
             if (!user) {
@@ -19,7 +18,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(500).json({ message: error.message });
         }
     }else if (req.method === 'GET') {
-        const { email } = req.query;
         try {
             const user = await getByEmail(email as string);
             if (!user) {
@@ -35,6 +33,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } catch (error) {
             
         }
+    }else if (req.method === 'DELETE') {
+        try {
+            await deleteOrderByEmail(email as string);
+            res.status(200).json({ message: 'Order deleted successfully' });
+        } catch (error: any) {
+            console.error('Error deleting order:', error);
+            res.status(500).json({ message: error.message });
+        }
+    }else {
+        res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
+        res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 
 }

@@ -53,7 +53,7 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
     };
     const handleOrder = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/order/${session?.user?.email}`, {
+          const response = await fetch(`${process.env.URLFETCH}/api/order/queryEmail/${session?.user?.email}`, {
             method: 'POST'
           });
           console.log(response);
@@ -74,7 +74,7 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
         const updateCart = async () => {
             try {
                 // Dapatkan IdUser dari server 
-                const IdUser = await fetch('http://localhost:3000/api/auth/getuser', {
+                const IdUser = await fetch(`${process.env.URLFETCH}/api/auth/getuser`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
                 }));
     
                 // fetch ke API untuk memperbarui cart di server
-                const newCart = await fetch(`http://localhost:3000/api/cart/${IdUser}`, {
+                const newCart = await fetch(`${process.env.URLFETCH}/api/cart/${IdUser}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -108,11 +108,9 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
             }
         };
     
-        // Panggil fungsi untuk update cart setelah setCart selesai
         updateCart();
     
-    }, [cart, session]); // Memantau perubahan pada state cart
-    
+    }, [cart, session]); 
     return (
         <div className="w-full  container mx-auto px-4 py-3">
             <h1 className="text-3xl font-bold mb-4 text-center">Your Cart</h1>
@@ -191,7 +189,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
     }
     try {
-        const IdUser = await fetch('http://localhost:3000/api/auth/getuser', {
+        const IdUser = await fetch(`${process.env.URLFETCH}/api/auth/getuser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -200,22 +198,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }).then((res) => res.json()).then((data) => {
             return data.data.id
         })
-        const dataBarang = await fetch(`http://localhost:3000/api/cart/${IdUser}`).then((res) => res.json());
-
-        console.log(dataBarang)
+        const dataBarang = await fetch(`${process.env.URLFETCH}/api/cart/${IdUser}`).then((res) => res.json());
 
         const products = [];
 
         for (const item of dataBarang) {
             const { productId } = item;
-            const product = await fetch(`http://localhost:3000/api/product/productsingle/${productId}`)
+            const product = await fetch(`${process.env.URLFETCH}/api/product/productsingle/${productId}`)
                 .then((res) => res.json());
             products.push({
                 ...item,
                 productDetails: product,
             });
         }
-        console.log(products)
         return {
             props: {
                 cart: products
