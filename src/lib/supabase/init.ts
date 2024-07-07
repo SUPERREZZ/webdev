@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { supabaseUrl, supabaseKey } from './credensial';
-// Initialize Supabase client
-const supabase = createClient(supabaseUrl, supabaseKey);
+const SUPABASEURL = `${process.env.SUPABASEURL}`;
+const SUPABASEKEY = `${process.env.SUPABASEKEY}`;
+const supabase = createClient(SUPABASEURL, SUPABASEKEY);
 
 export default supabase;
