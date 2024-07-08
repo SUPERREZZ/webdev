@@ -9,11 +9,8 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle';
 const Login = () => {
     const { push } = useRouter();
     const [error, setError] = useState('');
-<<<<<<< HEAD
-    const url: any = 'http://localhost:3000';
-=======
-    const url: any =  '/';
->>>>>>> af71b2805d2ae1d9defa420231bfe17ed2b86567
+    const url: any = 'https://webdev-ashen-nu.vercel.app';
+
 
     const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
