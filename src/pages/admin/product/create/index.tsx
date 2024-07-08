@@ -22,7 +22,7 @@ const AddProductForm: React.FC = () => {
         try {
             console.log({ name, description, price, imageUrl, stock, colors, sizes, location });
 
-            const res = await fetch(`https://webdev-ashen-nu.vercel.app/api/product`, {
+            const res = await fetch(`http://localhost:3000/api/product`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

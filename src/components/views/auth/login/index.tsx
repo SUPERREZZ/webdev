@@ -1,20 +1,19 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { signIn as signInNextAuth, getSession } from "next-auth/react";
+import { signIn as signInNextAuth } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, FormEvent } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle';
 const Login = () => {
-    const { push, query } = useRouter();
+    const { push } = useRouter();
     const [error, setError] = useState('');
-    const url: any = query?.url || '/';
+    const url: any = 'http://localhost:3000';
 
     const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
-
         try {
             const response = await signInNextAuth('credentials', {
                 email: (form.elements.namedItem('email') as HTMLInputElement).value,

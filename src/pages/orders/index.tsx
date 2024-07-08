@@ -41,8 +41,8 @@ const Orders: React.FC<OrdersProps> = ({ orders }) => {
     return total + order.quantity * order.productDetails.price;
   }, 0);
   return (
-    <div className="flex justify-center items-start space-x-4 p-4">
-      <div className="w-full max-w-2xl h-screen  p-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 h-screen">
+      <div className="lg:col-span-2 overflow-y-auto p-4">
         <h1 className="text-4xl font-bold m-4">Orders</h1>
         {data.length === 0 ? (
           <p>No orders found.</p>
@@ -79,14 +79,15 @@ const Orders: React.FC<OrdersProps> = ({ orders }) => {
           </div>
         )}
       </div>
-      <div className="w-1/4  max-w-xs p-4 bg-white rounded-lg shadow-md dark:bg-gray-800 self-center">
-        <h2 className="text-2xl font-semibold">Total Tagihan</h2>
-        <div className="flex justify-between mt-2">
+      <div className="w-full max-w-xs p-4 max-h-40  bg-white rounded-lg shadow-md dark:bg-gray-800 lg:sticky lg:top-4">
+        <h2 className="text-2xl font-semibold mt-3">Total Tagihan</h2>
+        <div className="flex justify-between mt-5">
           <span className="font-medium">Total Price:</span>
           <span>${totalPrice.toFixed(2)}</span>
         </div>
       </div>
     </div>
+
 
   );
 };
@@ -96,7 +97,7 @@ const OrdersPage: React.FC<OrdersProps> = ({ orders }) => {
   const router = useRouter();
   return (
     <Dashboard>
-      <div className='space-y-4 p-3 '>
+      <div className='space-y-4 p-3 w-full'>
         <Button onClick={() => router.back()} type="button" className="flex items-center gap-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-5">
           <FontAwesomeIcon icon={faArrowLeft} className="text-white" />
           <p>Back</p>
@@ -123,9 +124,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let orders = [];
 
   try {
-    orders = await fetch(`https://webdev-ashen-nu.vercel.app/api/order/queryEmail/${email}`).then((res) => res.json())
+    orders = await fetch(`http://localhost:3000/api/order/queryEmail/${email}`).then((res) => res.json())
     for (const item of orders.data) {
-      const product = await fetch(`https://webdev-ashen-nu.vercel.app/api/product/productsingle/${item.productId}`).then((res) => res.json())
+      const product = await fetch(`http://localhost:3000/api/product/productsingle/${item.productId}`).then((res) => res.json())
       item.productDetails = product
     }
 

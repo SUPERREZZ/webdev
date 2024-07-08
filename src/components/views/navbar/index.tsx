@@ -1,18 +1,16 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import Button from '@/components/ui/button';
 import UserDropdown from './userdropdown';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import Link from 'next/link';
 
 const Navbar = ({ setBarOpen, user, logout, handleSearch }: { setBarOpen: Function, user: any, logout: Function, handleSearch: Function }) => {
-  const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
   const isHome = router.pathname === '/';
 
   const handleInputChange = (event: any) => {
-    setSearchQuery(event.target.value);
     handleSearch(event.target.value);
   };
 
@@ -37,14 +35,14 @@ const Navbar = ({ setBarOpen, user, logout, handleSearch }: { setBarOpen: Functi
           />
         )}
         {user?.role !== 'admin' && (
-          <Button
+          <Link
             className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md px-3 py-2 top-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-            type="button"
+            href="/cart"
           >
             <FontAwesomeIcon icon={faCartShopping} />
-          </Button>
+          </Link>
         )}
-        <UserDropdown user={user} logout={logout} />
+        <UserDropdown logout={logout} />
       </div>
     </nav>
   );

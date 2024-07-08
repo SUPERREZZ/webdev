@@ -34,7 +34,7 @@ const ProductPage = ({ product }: { product: Product }) => {
     const handleAddToCart = async () => {
         try {
             // Dapatkan ID user dari sesi
-            const userId = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/getuser`, {
+            const userId = await fetch(`http://localhost:3000/api/auth/getuser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ const ProductPage = ({ product }: { product: Product }) => {
             console.log(userId);
 
             // Dapatkan data keranjang saat ini dari database
-            const currentCart: any = await fetch(`https://webdev-ashen-nu.vercel.app/api/cart/${userId}`)
+            const currentCart: any = await fetch(`http://localhost:3000/api/cart/${userId}`)
                 .then((res) => res.json());
 
             if (!currentCart) {
@@ -76,7 +76,7 @@ const ProductPage = ({ product }: { product: Product }) => {
                 });
             }
             // Perbarui keranjang di database
-            await fetch(`https://webdev-ashen-nu.vercel.app/api/cart/${userId}`, {
+            await fetch(`http://localhost:3000/api/cart/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ const ProductPageWithDashboard = ({ product }: { product: Product }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.params!;
-    const productResponse = await fetch(`https://webdev-ashen-nu.vercel.app/api/product/productsingle/${id}`);
+    const productResponse = await fetch(`http://localhost:3000/api/product/productsingle/${id}`);
     const productData = await productResponse.json();
 
     return {

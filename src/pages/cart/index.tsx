@@ -112,12 +112,12 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
 
     }, [cart, session]);
     return (
-        <div className="w-full  container mx-auto px-4 py-3">
+        <div className="w-full container mx-auto px-4 py-3">
             <h1 className="text-3xl font-bold mb-4 text-center">Your Cart</h1>
             {cart.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4 mt-10  md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 mt-10 md:grid-cols-2">
                     {cart.map((item) => (
-                        <div key={item.productId} className="w-full bg-white  p-4 rounded shadow-sm flex items-center">
+                        <div key={item.productId} className="w-full bg-white p-4 rounded shadow-sm flex items-center">
                             <Image
                                 src={item.productDetails.image_url}
                                 alt={item.productDetails.name}
@@ -128,20 +128,20 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
                             <div className="ml-4 flex-1">
                                 <h2 className="text-xl font-semibold text-black">{item.productDetails.name}</h2>
                                 <p className="text-gray-600">${item.productDetails.price}</p>
-                                <div className='flex items-center gap-6'>
-                                    <div className={`w-6 min-h-6 rounded-full `}
-                                        style={{ backgroundColor: (item.color) }}></div>
+                                <div className="flex items-center gap-6">
+                                    <div className={`w-6 min-h-6 rounded-full`} style={{ backgroundColor: item.color }}></div>
                                     <p className="text-gray-600">{item.size}</p>
                                     <p className="text-gray-600">{item.quantity} pcs</p>
                                 </div>
                                 <div className="mt-2">
-                                    <button onClick={() => removeFromCart(item.productId)} className="bg-red-500 text-white px-4 py-2 rounded mr-2">
+                                    <button
+                                        onClick={() => removeFromCart(item.productId)}
+                                        className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+                                    >
                                         Remove from Cart
                                     </button>
                                     <Link href={`/products/${item.productId}`}>
-                                        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                                            View Details
-                                        </button>
+                                        <button className="bg-blue-500 text-white px-4 py-2 rounded">View Details</button>
                                     </Link>
                                 </div>
                             </div>
@@ -149,24 +149,29 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
                     ))}
                 </div>
             ) : (
-                <p>Your cart is empty.</p>
+                <div className="flex items-center justify-center h-64">
+                    <p className="text-gray-600">Your cart is empty.</p>
+                </div>
             )}
-            <Link href="/">
-                <p className="mt-4 inline-block bg-blue-500 mr-3 text-white px-4 py-2 rounded">
-                    Continue Shopping
-                </p>
-            </Link>
-            <Button onClick={handleOrder} className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
-                Order
-            </Button>
+            <div className="mt-4 flex justify-between">
+                <Link href="/">
+                    <p className="inline-block bg-blue-500 text-white px-4 py-2 rounded">Continue Shopping</p>
+                </Link>
+                {cart.length > 0 && (
+                    <Button onClick={handleOrder} className="bg-blue-500 text-white px-4 py-2 rounded">
+                        Order
+                    </Button>
+                )}
+            </div>
         </div>
+
     );
 };
 const CartPageWithDashboard = ({ cart }: CartPageProps) => {
     const router = useRouter();
     return (
         <Dashboard>
-            <div className='space-y-4 p-3 '>
+            <div className='space-y-4 p-3 w-full '>
                 <Button onClick={() => router.back()} type="button" className="flex items-center gap-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-5">
                     <FontAwesomeIcon icon={faArrowLeft} className="text-white" />
                     <p>Back</p>

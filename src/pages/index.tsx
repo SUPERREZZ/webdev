@@ -18,64 +18,19 @@ type ProductType = {
   colors: string[];
 };
 
-
 const Dashboard = (props: any) => {
-  const { children, products } = props
-  const router = useRouter();
-  const { push } = useRouter();
-  const [error, setError] = useState('');
+  const { children, products, user } = props;
+  const { push, query } = useRouter();
   const { data: session, status } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState(products);
+  const [dataUser, setDataUser] = useState(user)
+
   useEffect(() => {
-    const registerUserIfNeeded = async () => {
-      if (session) {
-        const email = session.user?.email;
-        const name = session.user?.name;
-        try {
-          const regis = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/register`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: email,
-              password: email,
-              name: name,
-              role: 'user'
-            }),
-          });
-          const getData = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/getuser`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: email
-            }),
-          });
-          const data = await getData.json();
-          setUser(data.data);
-          if (regis.ok) {
-            setError('Registration successful');
-            push('/');
-          } else if (regis.status === 400) {
-            setError('Email already exists');
-          } else {
-            setError('Something went wrong');
-          }
-
-
-        } catch (error) {
-          setError('Error registering user');
-          console.error('Error registering user:', error);
-        }
-      }
-    };
-
-    registerUserIfNeeded();
-  }, [session, push]);
+    if (!session && status !== 'loading') {
+      push('/auth/login');
+    }
+  }, [session, status, push]);
 
   const handleSearch = (query: string) => {
     if (!query) {
@@ -91,7 +46,7 @@ const Dashboard = (props: any) => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     signOut({ callbackUrl: '/auth/login' }).then(() => {
-      router.push('/auth/login');
+      push('/auth/login');
     });
   };
 
@@ -99,14 +54,10 @@ const Dashboard = (props: any) => {
     return <p>Loading...</p>;
   }
 
-  if (!session) {
-    router.push('/auth/login');
-    return null;
-  }
 
   return (
     <>
-      <Navbar setBarOpen={setSidebarOpen} user={user} logout={handleLogout} handleSearch={handleSearch} />
+      <Navbar setBarOpen={setSidebarOpen} user={dataUser} logout={handleLogout} handleSearch={handleSearch} />
       <div className='flex  justify-center'>
         <Sidebar setBarOpen={setSidebarOpen} barOpen={sidebarOpen} logout={handleLogout} user={user} />
         {children ? children : <Product products={filteredProducts} />}
@@ -126,17 +77,59 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const product = await fetch(`https://webdev-ashen-nu.vercel.app/api/product`)
-  const data = await product.json()
+
+  let user = null;
+  const email = session.user?.email;
+  try {
+    // Fetch user data
+    const getData = await fetch(`http://localhost:3000/api/auth/getuser`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
+    const data = await getData.json();
+    console.log(data);
+    user = data.data;
+
+    // Register user if not exists
+    if (!user) {
+      const regis = await fetch(`http://localhost:3000/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: email,
+          name: session.user?.name,
+          role: 'user',
+        }),
+      });
+      if (regis.ok) {
+        const newUser = await getData.json();
+        user = newUser.data;
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+
+  const product = await fetch(`http://localhost:3000/api/product`);
+  const data = await product.json();
   if (!product) {
     return {
       notFound: true,
     };
-
   }
+
   return {
     props: {
       products: data.data,
+      user,
     },
   };
 };

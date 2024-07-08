@@ -26,7 +26,7 @@ interface ProductsPageProps {
 }
 
 const fetchProducts = async () => {
-    const response = await fetch(`https://webdev-ashen-nu.vercel.app/api/product`);
+    const response = await fetch(`http://localhost:3000/api/product`);
     const data = await response.json();
     return data.data;
 };
