@@ -27,7 +27,7 @@ const Register = () => {
             setError('Password and confirm password should match')
             return
         }
-        const response = await fetch(`${process.env.URLFETCH}/api/auth/register`, {
+        const response = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ const Register = () => {
         if (response.ok) {
             setError('Registration successful')
             router.push('/auth/login')
-        }else if (response.status === 400) {
+        } else if (response.status === 400) {
             setError('Email already exists')
             return
         } else {
@@ -76,7 +76,7 @@ const Register = () => {
                         <Button value="Register" type="submit" className="bg-black hover:bg-gray-200 text-white hover:text-black hover:cursor-pointer hover:outline-black hover:outline hover:outline-1 font-bold py-2 px-4 rounded w-full mt-10" id="registerButton" />
                     </div>
                 </form>
-                <p className="text-center text-gray-500 text-md mt-5">Already have an account?<Link href="/auth/login" className="text-blue-500 hover:text-blue-700 ml-1"  id="loginLink">Login here</Link></p>
+                <p className="text-center text-gray-500 text-md mt-5">Already have an account?<Link href="/auth/login" className="text-blue-500 hover:text-blue-700 ml-1" id="loginLink">Login here</Link></p>
             </div>
             <div id="toast-danger" className={`flex fixed mr-4 bottom-0 right-0 ${error !== '' && error !== 'Registration successful' ? '' : 'hidden'} justify-center max-w-lg animate-bounce-in items-center w-full p-4 mb-3 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800`} role="alert">
                 <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">

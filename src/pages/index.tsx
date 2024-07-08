@@ -19,8 +19,8 @@ type ProductType = {
 };
 
 
-const Dashboard = (props : any) => {
-  const {children,products} = props
+const Dashboard = (props: any) => {
+  const { children, products } = props
   const router = useRouter();
   const { push } = useRouter();
   const [error, setError] = useState('');
@@ -34,19 +34,19 @@ const Dashboard = (props : any) => {
         const email = session.user?.email;
         const name = session.user?.name;
         try {
-          const regis = await fetch(`${process.env.URLFETCH}/api/auth/register`, {
+          const regis = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               email: email,
-              password: email, 
+              password: email,
               name: name,
               role: 'user'
             }),
           });
-          const getData = await fetch(`${process.env.URLFETCH}/api/auth/getuser`, {
+          const getData = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/getuser`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -65,8 +65,8 @@ const Dashboard = (props : any) => {
           } else {
             setError('Something went wrong');
           }
-          
-          
+
+
         } catch (error) {
           setError('Error registering user');
           console.error('Error registering user:', error);
@@ -87,7 +87,7 @@ const Dashboard = (props : any) => {
       setFilteredProducts(filtered);
     }
   };
-  
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     signOut({ callbackUrl: '/auth/login' }).then(() => {
@@ -109,7 +109,7 @@ const Dashboard = (props : any) => {
       <Navbar setBarOpen={setSidebarOpen} user={user} logout={handleLogout} handleSearch={handleSearch} />
       <div className='flex  justify-center'>
         <Sidebar setBarOpen={setSidebarOpen} barOpen={sidebarOpen} logout={handleLogout} user={user} />
-        {children ? children : <Product  products={filteredProducts} />}
+        {children ? children : <Product products={filteredProducts} />}
       </div>
     </>
   );
@@ -126,17 +126,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const product = await  fetch(`${process.env.URLFETCH}/api/product`)
+  const product = await fetch(`https://webdev-ashen-nu.vercel.app/api/product`)
   const data = await product.json()
-    if (!product) {
-      return {
-        notFound: true,
-      };
-      
-    }
+  if (!product) {
+    return {
+      notFound: true,
+    };
+
+  }
   return {
-    props:{
-      products : data.data,
+    props: {
+      products: data.data,
     },
   };
 };

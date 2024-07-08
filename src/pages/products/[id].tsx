@@ -34,7 +34,7 @@ const ProductPage = ({ product }: { product: Product }) => {
     const handleAddToCart = async () => {
         try {
             // Dapatkan ID user dari sesi
-            const userId = await fetch(`${process.env.URLFETCH}/api/auth/getuser`, {
+            const userId = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/getuser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,11 +42,11 @@ const ProductPage = ({ product }: { product: Product }) => {
                 body: JSON.stringify({ email: session?.user?.email })
             }).then((res) => res.json()).then((data) => data.data.id);
             console.log(userId);
-    
+
             // Dapatkan data keranjang saat ini dari database
-            const currentCart: any = await fetch(`${process.env.URLFETCH}/api/cart/${userId}`)
+            const currentCart: any = await fetch(`https://webdev-ashen-nu.vercel.app/api/cart/${userId}`)
                 .then((res) => res.json());
-            
+
             if (!currentCart) {
                 currentCart.push({
                     size: selectedSize,
@@ -62,7 +62,7 @@ const ProductPage = ({ product }: { product: Product }) => {
                     item.size === selectedSize &&
                     item.color === selectedColor
             );
-    
+
             if (existingItemIndex !== -1) {
                 // Jika produk sudah ada, tingkatkan quantity
                 currentCart[existingItemIndex].quantity += 1;
@@ -74,23 +74,23 @@ const ProductPage = ({ product }: { product: Product }) => {
                     quantity: 1,
                     productId: product.id,
                 });
-            }    
+            }
             // Perbarui keranjang di database
-            await fetch(`${process.env.URLFETCH}/api/cart/${userId}`, {
+            await fetch(`https://webdev-ashen-nu.vercel.app/api/cart/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ cart: currentCart }),
             }).then((res) => res.json());
-           
+
             // Arahkan pengguna ke halaman keranjang
             router.push('/cart');
         } catch (error) {
             console.error('Error updating cart:', error);
         }
     };
-    
+
 
     if (!product) {
         return <p>Loading...</p>;
@@ -171,7 +171,7 @@ const ProductPageWithDashboard = ({ product }: { product: Product }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.params!;
-    const productResponse = await fetch(`${process.env.URLFETCH}/api/product/productsingle/${id}`);
+    const productResponse = await fetch(`https://webdev-ashen-nu.vercel.app/api/product/productsingle/${id}`);
     const productData = await productResponse.json();
 
     return {

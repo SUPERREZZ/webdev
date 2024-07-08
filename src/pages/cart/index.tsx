@@ -53,28 +53,28 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
     };
     const handleOrder = async () => {
         try {
-          const response = await fetch(`${process.env.URLFETCH}/api/order/queryEmail/${session?.user?.email}`, {
-            method: 'POST'
-          });
-          console.log(response);
-          if (response.ok) {
-            alert('Order placed successfully');
-            router.push('/orders'); // Arahkan ke halaman order atau halaman lain yang diinginkan
-          } else {
-            const result = await response.json();
-            alert(result.message || 'Failed to place order');
-          }
+            const response = await fetch(`https://webdev-ashen-nu.vercel.app/api/order/queryEmail/${session?.user?.email}`, {
+                method: 'POST'
+            });
+            console.log(response);
+            if (response.ok) {
+                alert('Order placed successfully');
+                router.push('/orders'); // Arahkan ke halaman order atau halaman lain yang diinginkan
+            } else {
+                const result = await response.json();
+                alert(result.message || 'Failed to place order');
+            }
         } catch (error) {
-          console.error('Error placing order:', error);
-          alert('Error placing order');
+            console.error('Error placing order:', error);
+            alert('Error placing order');
         }
-      };
-    
+    };
+
     useEffect(() => {
         const updateCart = async () => {
             try {
                 // Dapatkan IdUser dari server 
-                const IdUser = await fetch(`${process.env.URLFETCH}/api/auth/getuser`, {
+                const IdUser = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/getuser`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
                 }).then((res) => res.json()).then((data) => {
                     return data.data.id;
                 });
-    
+
                 // Ambil cart yang sudah diperbarui dari state 
                 const updatedCart = cart.map((item) => ({
                     productId: item.productId,
@@ -91,26 +91,26 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
                     size: item.size,
                     color: item.color
                 }));
-    
+
                 // fetch ke API untuk memperbarui cart di server
-                const newCart = await fetch(`${process.env.URLFETCH}/api/cart/${IdUser}`, {
+                const newCart = await fetch(`https://webdev-ashen-nu.vercel.app/api/cart/${IdUser}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ cart: updatedCart })
                 }).then((res) => res.json());
-    
+
                 console.log(newCart);
-    
+
             } catch (error) {
                 console.error('Error updating cart:', error);
             }
         };
-    
+
         updateCart();
-    
-    }, [cart, session]); 
+
+    }, [cart, session]);
     return (
         <div className="w-full  container mx-auto px-4 py-3">
             <h1 className="text-3xl font-bold mb-4 text-center">Your Cart</h1>
@@ -129,10 +129,10 @@ const CartPage: React.FC<CartPageProps> = ({ cart: initialCart }) => {
                                 <h2 className="text-xl font-semibold text-black">{item.productDetails.name}</h2>
                                 <p className="text-gray-600">${item.productDetails.price}</p>
                                 <div className='flex items-center gap-6'>
-                                <div className={`w-6 min-h-6 rounded-full `}
-                                    style={{ backgroundColor: (item.color) }}></div>
-                                <p className="text-gray-600">{item.size}</p>
-                                <p className="text-gray-600">{item.quantity} pcs</p>
+                                    <div className={`w-6 min-h-6 rounded-full `}
+                                        style={{ backgroundColor: (item.color) }}></div>
+                                    <p className="text-gray-600">{item.size}</p>
+                                    <p className="text-gray-600">{item.quantity} pcs</p>
                                 </div>
                                 <div className="mt-2">
                                     <button onClick={() => removeFromCart(item.productId)} className="bg-red-500 text-white px-4 py-2 rounded mr-2">
@@ -189,7 +189,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
     }
     try {
-        const IdUser = await fetch(`${process.env.URLFETCH}/api/auth/getuser`, {
+        const IdUser = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/getuser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -198,13 +198,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }).then((res) => res.json()).then((data) => {
             return data.data.id
         })
-        const dataBarang = await fetch(`${process.env.URLFETCH}/api/cart/${IdUser}`).then((res) => res.json());
+        const dataBarang = await fetch(`https://webdev-ashen-nu.vercel.app/api/cart/${IdUser}`).then((res) => res.json());
 
         const products = [];
 
         for (const item of dataBarang) {
             const { productId } = item;
-            const product = await fetch(`${process.env.URLFETCH}/api/product/productsingle/${productId}`)
+            const product = await fetch(`https://webdev-ashen-nu.vercel.app/api/product/productsingle/${productId}`)
                 .then((res) => res.json());
             products.push({
                 ...item,

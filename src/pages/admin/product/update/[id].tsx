@@ -34,7 +34,7 @@ const UpdateProductPage: React.FC<UpdateProductPageProps> = ({ product }) => {
 
   const handleUpdate = async () => {
     try {
-      const response = await fetch(`${process.env.URLFETCH}/api/product/productsingle/${updatedProduct.id}`, {
+      const response = await fetch(`https://webdev-ashen-nu.vercel.app/api/product/productsingle/${updatedProduct.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let product = null;
 
   try {
-    const response = await fetch(`${process.env.URLFETCH}/api/product/productsingle/${id}`);
+    const response = await fetch(`https://webdev-ashen-nu.vercel.app/api/product/productsingle/${id}`);
     product = await response.json();
   } catch (error) {
     console.error(error);
