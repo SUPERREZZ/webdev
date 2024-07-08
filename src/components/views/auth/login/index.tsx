@@ -9,7 +9,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle';
 const Login = () => {
     const { push, query } = useRouter();
     const [error, setError] = useState('');
-    const url: any = query?.url || '/';
+    const url: any =  '/';
 
     const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
