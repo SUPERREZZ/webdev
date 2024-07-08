@@ -36,7 +36,7 @@ const Register = () => {
                 email: data.email,
                 password: data.password,
                 name: data.name,
-                role: 'admin'
+                role: 'user'
             })
         })
         if (response.ok) {

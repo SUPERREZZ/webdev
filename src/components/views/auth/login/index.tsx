@@ -14,7 +14,7 @@ const Login = () => {
     const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
-        
+
         try {
             const response = await signInNextAuth('credentials', {
                 email: (form.elements.namedItem('email') as HTMLInputElement).value,
@@ -30,6 +30,7 @@ const Login = () => {
                 setError(response.error || 'Invalid login');
             }
         } catch (error) {
+            console.log(error);
             setError('Error logging in');
             console.error('Error logging in:', error);
         }
@@ -37,7 +38,7 @@ const Login = () => {
 
     const handleGoogleLogin = async () => {
         const callbackUrl = '/';
-    
+
         try {
             // Sign in with Google
             const response = await signInNextAuth('google', { callbackUrl });
@@ -49,13 +50,13 @@ const Login = () => {
             console.error('Error logging in with Google:', error);
         }
     };
-    
+
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
             <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Login</h2>
             <div className="flex justify-center space-x-6">
-                <Button  onClick={handleGoogleLogin} className="bg-black hover:bg-white text-white text-xl hover:text-black hover:cursor-pointer hover:outline-black hover:outline hover:outline-1 font-bold py-1 px-2 rounded-full" id="Google">
+                <Button onClick={handleGoogleLogin} className="bg-black hover:bg-white text-white text-xl hover:text-black hover:cursor-pointer hover:outline-black hover:outline hover:outline-1 font-bold py-1 px-2 rounded-full" id="Google">
                     <FontAwesomeIcon icon={faGoogle} />
                 </Button>
             </div>
