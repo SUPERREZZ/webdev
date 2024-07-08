@@ -23,7 +23,7 @@ const OrderManagementPage = ({ initialOrders }: { initialOrders: Order[] }) => {
 
     const handleDelete = async (email: string) => {
         try {
-            const res = await fetch(`http://localhost:3000/api/order/queryEmail/${email}`, {
+            const res = await fetch(`https://webdev-ashen-nu.vercel.app/api/order/queryEmail/${email}`, {
                 method: 'DELETE',
             });
 
@@ -139,7 +139,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     let initialOrders: Order[] = [];
 
     try {
-        const res = await fetch(`http://localhost:3000/api/order/getAll`);
+        const res = await fetch(`https://webdev-ashen-nu.vercel.app/api/order/getAll`);
         initialOrders = await res.json();
         console.log(initialOrders);
     } catch (error) {

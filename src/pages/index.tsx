@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const email = session.user?.email;
   try {
     // Fetch user data
-    const getData = await fetch(`http://localhost:3000/api/auth/getuser`, {
+    const getData = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/getuser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     // Register user if not exists
     if (!user) {
-      const regis = await fetch(`http://localhost:3000/api/auth/register`, {
+      const regis = await fetch(`https://webdev-ashen-nu.vercel.app/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     console.error('Error fetching user data:', error);
   }
 
-  const product = await fetch(`http://localhost:3000/api/product`);
+  const product = await fetch(`https://webdev-ashen-nu.vercel.app/api/product`);
   const data = await product.json();
   if (!product) {
     return {

@@ -124,9 +124,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let orders = [];
 
   try {
-    orders = await fetch(`http://localhost:3000/api/order/queryEmail/${email}`).then((res) => res.json())
+    orders = await fetch(`https://webdev-ashen-nu.vercel.app/api/order/queryEmail/${email}`).then((res) => res.json())
     for (const item of orders.data) {
-      const product = await fetch(`http://localhost:3000/api/product/productsingle/${item.productId}`).then((res) => res.json())
+      const product = await fetch(`https://webdev-ashen-nu.vercel.app/api/product/productsingle/${item.productId}`).then((res) => res.json())
       item.productDetails = product
     }
 
