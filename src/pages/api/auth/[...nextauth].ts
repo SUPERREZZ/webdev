@@ -18,7 +18,7 @@ const authOptions: NextAuthOptions = {
                 const { email, password } = credentials as { email: string, password: string };
                 console.log(email, password);
                 try {
-                    const res = await fetch("http://localhost:3000/api/auth/login", {
+                    const res = await fetch("https://webdev-ashen-nu.vercel.app/api/auth/login", {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password }),
@@ -48,7 +48,7 @@ const authOptions: NextAuthOptions = {
             if (user) {
                 token.id = user.id;
                 token.email = user.email;
-                token.name = user.name; 
+                token.name = user.name;
             }
             return token;
         },

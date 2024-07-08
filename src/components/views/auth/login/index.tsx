@@ -30,7 +30,6 @@ const Login = () => {
                 setError(response.error || 'Invalid login');
             }
         } catch (error) {
-            console.log(error);
             setError('Error logging in');
             console.error('Error logging in:', error);
         }
